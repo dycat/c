@@ -14,7 +14,7 @@ public class GenerateAst {
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Binary   : Expr left, Token operator, Expr right",
-                "Grouping : Expr Expression",
+                "Grouping : Expr expression",
                 "Literal  : Object value",
                 "Unary    : Token operator, Expr right"
         ));
@@ -28,11 +28,13 @@ public class GenerateAst {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, "UTF-8");
 
-        writer.println("package lox");
+        writer.println("package lox;");
         writer.println();
-        writer.println("import java.util.List");
+        writer.println("import java.util.List;");
         writer.println();
         writer.println("abstract class " + baseName + "{");
+
+        defineVisitor(writer, baseName, types);
 
         // The AST classes
         for (String type: types) {
@@ -41,6 +43,11 @@ public class GenerateAst {
             defineType(writer, baseName, className, fields);
         }
 
+        // the base accept() method
+        writer.println();
+
+        writer.println("  abstract <R> R accept(Visitor<R> visitor);");
+
         writer.println("}");
         writer.close();
     }
@@ -48,7 +55,7 @@ public class GenerateAst {
     private static void defineType(
             PrintWriter writer, String baseName, String className, String fieldList
     ) {
-        writer.println("static class"  + className + "extends" + baseName + "{");
+        writer.println("  static class "  + className + " extends " + baseName + " {");
 
         // constructor
         writer.println("    " + className + "(" + fieldList + ") {");
@@ -61,6 +68,12 @@ public class GenerateAst {
         }
         writer.println("    }");
 
+        writer.println();
+        writer.println("    @Override");
+        writer.println("    <R> R accept(Visitor<R> visitor) {");
+        writer.println("      return visitor.visit" + className + baseName + "(this);");
+        writer.println("   }");
+
         // fields
         writer.println();
         for (String field: fields) {
@@ -68,5 +81,18 @@ public class GenerateAst {
         }
 
         writer.println("  }");
+    }
+
+    private static void defineVisitor(
+            PrintWriter writer, String baseName, List<String> types
+    ) {
+        writer.println("  interface Visitor<R> {");
+
+        for (String type: types) {
+            String typeName = type.split(":")[0].trim();
+            writer.println("  R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
+        }
+
+        writer.println(" }");
     }
 }
