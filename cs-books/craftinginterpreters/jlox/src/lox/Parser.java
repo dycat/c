@@ -14,20 +14,20 @@ public class Parser {
         this.tokens = tokens;
     }
 
-//    List<Stmt> parse() {
-//        List<Stmt> statements = new ArrayList<>();
-//        while (!isAtEnd()) {
-//            statements.add(statement());
-//        }
-//        return statements;
-//    }
-    Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+        return statements;
     }
+//    Expr parse() {
+//        try {
+//            return expression();
+//        } catch (ParseError error) {
+//            return null;
+//        }
+//    }
 
     private Expr expression() {
         return equality();
@@ -40,9 +40,9 @@ public class Parser {
     }
 
     private Stmt printStatement() {
-        Expr expr = expression();
+        Expr value = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
-        return new Stmt.Expression(expr);
+        return new Stmt.Print(value);
     }
 
     private Stmt expressionStatement() {
