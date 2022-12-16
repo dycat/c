@@ -17,7 +17,8 @@ public class Parser {
     List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            statements.add(statement());
+//            statements.add(statement());
+            statements.add(declaration());
         }
         return statements;
     }
@@ -30,7 +31,25 @@ public class Parser {
 //    }
 
     private Expr expression() {
-        return equality();
+        return assighnment();
+    }
+
+    private Expr assighnment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assighnment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     private Stmt statement() {
@@ -39,10 +58,33 @@ public class Parser {
         return expressionStatement();
     }
 
+    private Stmt declaration() {
+        try {
+            if (match(VAR)) return varDeclaration();
+
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
     private Stmt printStatement() {
         Expr value = expression();
         consume(SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Print(value);
+    }
+
+    private Stmt varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
     }
 
     private Stmt expressionStatement() {
@@ -148,6 +190,10 @@ public class Parser {
 
         if (match(NUMBER, STRING)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
 
         if (match(LEFT_PAREN)) {
