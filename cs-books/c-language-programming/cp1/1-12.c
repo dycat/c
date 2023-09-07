@@ -9,7 +9,7 @@ int main() {
         if (c == ' ') {
             putchar('\n');
         } else {
-            putchar(c);
+            putchar('*');
         }
     }
     
