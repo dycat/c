@@ -13,8 +13,8 @@ void print_limits() {
     printf("long: %ld %ld\n", LONG_MIN, LONG_MAX);
     printf("unsigned char: %d\n", UCHAR_MAX);
     printf("unsigned short: %d\n", USHRT_MAX);
-    printf("unsigned int: %d\n", UINT_MAX);
-    printf("unsigned long: %ld\n", ULONG_MAX);
+    printf("unsigned int: %u\n", UINT_MAX);
+    printf("unsigned long: %lu\n", ULONG_MAX);
 
 }
 
