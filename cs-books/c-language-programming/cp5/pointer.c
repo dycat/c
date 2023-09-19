@@ -8,7 +8,6 @@ int main() {
         printf("%c", *pmessage);
         pmessage++;
     }
-    
 
     for (int i=0; pmessage[i] != '\0'; i++) {
         printf("%c", pmessage[i]);

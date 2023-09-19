@@ -143,5 +143,12 @@ int main(int argc, char *argv[])
     show_long(12345);
      printf("Calling show_double\n");
     show_double(12345);
+
+    int hex = 0x87654321;
+    byte_pointer hexp = (byte_pointer) &hex;
+    printf("\n");
+    show_bytes(hexp, 1);
+    show_bytes(hexp, 2);
+    show_bytes(hexp, 3);
     return 0;
 }

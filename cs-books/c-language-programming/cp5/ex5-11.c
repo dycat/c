@@ -14,26 +14,24 @@ void show_stack();
 int atoi(char *s);
 
 int stack[MAXNUM];
-int top;
+int top = 0;
 
 int main(int argc, char *argv[]) {
     
-    int n = 0;
     int op1, op2;
+    
+    show_stack();
 
     for (int i = 1; i < argc; i++) {
-        printf("The arg is %c\n", *argv[i]);
         if (*argv[i] > '0' && *argv[i] <= '9') {
+            printf("the num is %d\n", atoi(argv[i]));
             push(atoi(argv[i]));
-            show_stack();
         } else {
             switch (*argv[i]) {
             case '+':
                 op1 = pop();
                 op2 = pop();
                 int sum = op1 + op2;
-                printf("the sum: %d, op1: %d, op2: %d", sum, op1, op2);
-                
                 push(sum);
                 break;
             case '-':
@@ -59,26 +57,27 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-
+    show_stack();
     printf("%d", stack[0]);
 }
 
 void push(int x) {
-    if (top >= MAXNUM) {
-        return ;
-    }
+    // if (top >= MAXNUM) {
+    //     return ;
+    // }
     stack[top] = x;
     top += 1;
-    
 
 }
 
 int pop() {
     show_stack();
-    int return_value = stack[top];
-    top -= 1;
-    
-    return return_value; 
+    if (top > 0) {
+        int return_value = stack[top];
+        top -= 1;
+        return return_value; 
+    }
+    return 0;
 }
 
 void show_stack() {
