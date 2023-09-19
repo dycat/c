@@ -99,6 +99,11 @@ void show_twocomp()
 /* $end show-twocomp */
 }
 
+void ex2_7() {
+    const char *s = "abcdef";
+    show_bytes((byte_pointer) s, strlen(s));
+}
+
 void show_short(short x) {
     show_bytes((byte_pointer) &x, sizeof(x));
 }
@@ -150,5 +155,8 @@ int main(int argc, char *argv[])
     show_bytes(hexp, 1);
     show_bytes(hexp, 2);
     show_bytes(hexp, 3);
+
+    printf("\n");
+    ex2_7();
     return 0;
 }
