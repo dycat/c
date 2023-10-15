@@ -8,6 +8,6 @@ client.connect((serverName, serverPort))
 sentence = input('Input sentences: ')
 client.send(sentence.encode())
 
-modifiedSentence = client.recv()
+modifiedSentence = client.recv(1024)
 print(f"From server: {modifiedSentence.decode()}")
 client.close()
