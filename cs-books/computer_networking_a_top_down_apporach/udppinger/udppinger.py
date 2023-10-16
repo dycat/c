@@ -13,7 +13,9 @@ for i in range(1, 11):
             print(message.decode())
             recvTime = time.time()
             print(f"The RTT is: {recvTime - startTime}")
+            print("")
         except TimeoutError:
             print("Request timed out")
+            print("")
     
 pinger.close()
